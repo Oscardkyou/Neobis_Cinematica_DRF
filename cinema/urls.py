@@ -1,17 +1,19 @@
 from django.urls import path, include
-from .views import (
-    MovieListCreateAPIView, MovieRetrieveUpdateDestroyAPIView,
-    CinemaListCreateAPIView, CinemaRetrieveUpdateDestroyAPIView,
-    RoomListCreateAPIView, RoomRetrieveUpdateDestroyAPIView,
-    SeatListCreateAPIView, SeatRetrieveUpdateDestroyAPIView,
-    ShowtimeListCreateAPIView, ShowtimeRetrieveUpdateDestroyAPIView,
-    TicketListCreateAPIView, TicketRetrieveUpdateDestroyAPIView,
-    FeedbackListCreateAPIView, FeedbackRetrieveUpdateDestroyAPIView,
-    DiscountListCreateAPIView, DiscountRetrieveUpdateDestroyAPIView
-)
+from rest_framework.routers import DefaultRouter
+from .views import MovieViewSet, CinemaViewSet, RoomViewSet, SeatViewSet, ShowtimeViewSet, TicketViewSet, FeedbackViewSet, DiscountViewSet
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+
+router = DefaultRouter()
+router.register(r'movies', MovieViewSet)
+router.register(r'cinemas', CinemaViewSet)
+router.register(r'rooms', RoomViewSet)
+router.register(r'seats', SeatViewSet)
+router.register(r'showtimes', ShowtimeViewSet)
+router.register(r'tickets', TicketViewSet)
+router.register(r'feedback', FeedbackViewSet)
+router.register(r'discounts', DiscountViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -27,35 +29,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('movies/', MovieListCreateAPIView.as_view(), name='movie-list-create'),
-    path('movies/<int:pk>/', MovieRetrieveUpdateDestroyAPIView.as_view(), name='movie-detail'),
-
-    path('cinemas/', CinemaListCreateAPIView.as_view(), name='cinema-list-create'),
-    path('cinemas/<int:pk>/', CinemaRetrieveUpdateDestroyAPIView.as_view(), name='cinema-detail'),
-
-    path('rooms/', RoomListCreateAPIView.as_view(), name='room-list-create'),
-    path('rooms/<int:pk>/', RoomRetrieveUpdateDestroyAPIView.as_view(), name='room-detail'),
-
-    path('seats/', SeatListCreateAPIView.as_view(), name='seat-list-create'),
-    path('seats/<int:pk>/', SeatRetrieveUpdateDestroyAPIView.as_view(), name='seat-detail'),
-
-    path('showtimes/', ShowtimeListCreateAPIView.as_view(), name='showtime-list-create'),
-    path('showtimes/<int:pk>/', ShowtimeRetrieveUpdateDestroyAPIView.as_view(), name='showtime-detail'),
-
-    path('tickets/', TicketListCreateAPIView.as_view(), name='ticket-list-create'),
-    path('tickets/<int:pk>/', TicketRetrieveUpdateDestroyAPIView.as_view(), name='ticket-detail'),
-
-    path('feedback/', FeedbackListCreateAPIView.as_view(), name='feedback-list-create'),
-    path('feedback/<int:pk>/', FeedbackRetrieveUpdateDestroyAPIView.as_view(), name='feedback-detail'),
-
-    path('discounts/', DiscountListCreateAPIView.as_view(), name='discount-list-create'),
-    path('discounts/<int:pk>/', DiscountRetrieveUpdateDestroyAPIView.as_view(), name='discount-detail'),
-
-    # Swagger URLs
+    path('', include(router.urls)),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-]
-
-urlpatterns = [
-    path('api/', include(urlpatterns)),
 ]
