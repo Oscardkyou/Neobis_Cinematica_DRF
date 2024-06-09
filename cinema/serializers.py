@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Movie, Cinema, Room, Seat, Showtime, Ticket, Feedback, Discount
+from .models import Movie, Cinema, Room, Seat, Showtime, Ticket, Feedback, Discount, PurchaseHistory
 from django.utils import timezone
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -41,6 +41,13 @@ class SeatSerializer(serializers.ModelSerializer):
         model = Seat
         fields = ['id', 'room', 'number', 'is_reserved']
 
+    def validate(self, data):
+        room = data.get('room')
+        number = data.get('number')
+        if Seat.objects.filter(room=room, number=number).exists():
+            raise serializers.ValidationError("This seat number is already taken in this room.")
+        return data
+
 class ShowtimeSerializer(serializers.ModelSerializer):
     movie_title = serializers.CharField(source='movie.title', read_only=True)
     cinema_name = serializers.CharField(source='room.cinema.name', read_only=True)
@@ -58,12 +65,18 @@ class TicketSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = ['id', 'showtime', 'showtime_details', 'seat', 'seat_number', 'price', 'purchased_by', 'purchase_date', 'payment_method']
 
+    def validate_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Price must be a positive number.")
+        return value
+
 class FeedbackSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
         model = Feedback
         fields = ['id', 'user', 'user_name', 'message', 'created_at']
+        read_only_fields = ['created_at']
 
 class DiscountSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
@@ -71,3 +84,12 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = ['id', 'user', 'user_name', 'amount', 'description', 'created_at']
+        read_only_fields = ['created_at']
+
+class PurchaseHistorySerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.username', read_only=True)
+    ticket_details = serializers.CharField(source='ticket.__str__', read_only=True)
+
+    class Meta:
+        model = PurchaseHistory
+        fields = ['id', 'user', 'user_name', 'ticket', 'ticket_details', 'purchase_date', 'amount']

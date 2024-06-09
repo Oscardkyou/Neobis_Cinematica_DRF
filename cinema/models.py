@@ -73,3 +73,12 @@ class Discount(models.Model):
 
     def __str__(self):
         return f"Discount of {self.amount} for {self.user.username}"
+
+class PurchaseHistory(models.Model):
+    user = models.ForeignKey(User, related_name='purchase_histories', on_delete=models.CASCADE)
+    ticket = models.ForeignKey(Ticket, related_name='purchase_histories', on_delete=models.CASCADE)
+    purchase_date = models.DateTimeField(auto_now_add=True)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
+
+    def __str__(self):
+        return f"Purchase by {self.user.username} on {self.purchase_date}"
