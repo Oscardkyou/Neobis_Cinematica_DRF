@@ -107,4 +107,17 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+<<<<<<< HEAD
         return f'Review by {self.user.username} for {self.movie.title}'
+=======
+        return f"Discount of {self.amount} for {self.user.username}"
+
+class PurchaseHistory(models.Model):
+    user = models.ForeignKey(User, related_name='purchase_histories', on_delete=models.CASCADE)
+    ticket = models.ForeignKey(Ticket, related_name='purchase_histories', on_delete=models.CASCADE)
+    purchase_date = models.DateTimeField(auto_now_add=True)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
+
+    def __str__(self):
+        return f"Purchase by {self.user.username} on {self.purchase_date}"
+>>>>>>> 02bb152a1c2a2d7e009c8be31241d1d8a59643c5
