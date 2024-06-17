@@ -43,6 +43,6 @@ class FeedbackAdmin(admin.ModelAdmin):
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ('user', 'amount', 'description', 'created_at')
-    list_filter = ('created_at',)
-    search_fields = ('user__username', 'description')
+    list_display = ('code', 'description', 'discount_percentage', 'valid_until')
+    list_filter = ('valid_until',)
+    search_fields = ('code', 'description')

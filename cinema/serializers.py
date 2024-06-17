@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Movie, Cinema, Room, Seat, Showtime, Ticket, Feedback, Discount
+from .models import Movie, Cinema, Room, Seat, Showtime, Ticket, Feedback, Discount, Review, User
 from django.utils import timezone
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -66,8 +66,19 @@ class FeedbackSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'user_name', 'message', 'created_at']
 
 class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = ['id', 'code', 'description', 'discount_percentage', 'valid_until']
+
+class ReviewSerializer(serializers.ModelSerializer):
+    movie_title = serializers.CharField(source='movie.title', read_only=True)
     user_name = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
-        model = Discount
-        fields = ['id', 'user', 'user_name', 'amount', 'description', 'created_at']
+        model = Review
+        fields = ['id', 'movie', 'movie_title', 'user', 'user_name', 'rating', 'comment', 'created_at']
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined']

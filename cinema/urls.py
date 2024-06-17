@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import MovieViewSet, CinemaViewSet, RoomViewSet, SeatViewSet, ShowtimeViewSet, TicketViewSet, FeedbackViewSet, DiscountViewSet
+from .views import MovieViewSet, CinemaViewSet, RoomViewSet, SeatViewSet, ShowtimeViewSet, TicketViewSet, FeedbackViewSet, DiscountViewSet, ReviewViewSet, UserViewSet
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
@@ -14,6 +14,8 @@ router.register(r'showtimes', ShowtimeViewSet)
 router.register(r'tickets', TicketViewSet)
 router.register(r'feedback', FeedbackViewSet)
 router.register(r'discounts', DiscountViewSet)
+router.register(r'reviews', ReviewViewSet)
+router.register(r'users', UserViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(

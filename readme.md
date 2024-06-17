@@ -1,4 +1,5 @@
 🎬 Cinema Management System
+
 📝 Description
 
 This project is a REST API built with Django Rest Framework for managing cinemas, movies, showtimes, tickets, and user feedback. It provides a comprehensive system for clients to explore available movies, cinemas, showtimes, and purchase tickets, while administrators can efficiently manage movies, cinemas, showtimes, and user feedback.
